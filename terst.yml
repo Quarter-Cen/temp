@@ -1,0 +1,58 @@
+
+stages:
+  - test
+
+# ============================
+# TEST SHELL EXECUTOR
+# ============================
+test-shell:
+  stage: test
+  tags:
+    - shell
+
+  script:
+    - echo "=== TEST SHELL RUNNER ==="
+    - echo "Runner Name = $CI_RUNNER_DESCRIPTION"
+    - echo "Runner ID = $CI_RUNNER_ID"
+    - echo "Hostname:"
+    - hostname
+    - echo "Current User:"
+    - whoami
+    - echo "OS Information:"
+    - cat /etc/os-release
+    - echo "SHELL RUNNER SUCCESS" > shell-result.txt
+    - cat shell-result.txt
+    - grep -q "SHELL RUNNER SUCCESS" shell-result.txt
+
+  artifacts:
+    paths:
+      - shell-result.txt
+    expire_in: 1 day
+
+# ============================
+# TEST DOCKER EXECUTOR
+# ============================
+test-docker:
+  stage: test
+  image: alpine:3.22
+  tags:
+    - docker
+
+  script:
+    - echo "=== TEST DOCKER RUNNER ==="
+    - echo "Runner Name = $CI_RUNNER_DESCRIPTION"
+    - echo "Runner ID = $CI_RUNNER_ID"
+    - echo "Container Hostname:"
+    - hostname
+    - echo "Container OS:"
+    - cat /etc/os-release
+    - echo "Alpine Version:"
+    - cat /etc/alpine-release
+    - echo "DOCKER RUNNER SUCCESS" > docker-result.txt
+    - cat docker-result.txt
+    - grep -q "DOCKER RUNNER SUCCESS" docker-result.txt
+
+  artifacts:
+    paths:
+      - docker-result.txt
+    expire_in: 1 day
